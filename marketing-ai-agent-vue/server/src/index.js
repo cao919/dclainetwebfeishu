@@ -1,10 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import { config } from './src/config/index.js';
-import { createConnection, closeConnection } from './src/config/database.js';
-import tasksRouter from './src/routes/tasks.js';
-import dashboardRouter from './src/routes/dashboard.js';
-import analyticsRouter from './src/routes/analytics.js';
+import { config } from './config/index.js';
+import { createConnection, closeConnection } from './config/database.js';
+import tasksRouter from './routes/tasks.js';
+import dashboardRouter from './routes/dashboard.js';
+import analyticsRouter from './routes/analytics.js';
 
 const app = express();
 
