@@ -1,6 +1,5 @@
 <template>
-  <Layout>
-    <div class="dashboard">
+  <div class="dashboard">
       <el-row :gutter="20">
         <el-col :span="24">
           <h2 class="page-title">营销仪表盘</h2>
@@ -77,13 +76,11 @@
         </el-col>
       </el-row>
     </div>
-  </Layout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import * as echarts from 'echarts';
-import Layout from '../components/Layout.vue';
 import { useDashboardStore } from '../stores/dashboard';
 import {
   Document,

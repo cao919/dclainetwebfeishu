@@ -1,6 +1,5 @@
 <template>
-  <Layout>
-    <div class="analytics">
+  <div class="analytics">
       <el-row :gutter="20">
         <el-col :span="24">
           <div class="page-header">
@@ -104,7 +103,6 @@
         </el-col>
       </el-row>
     </div>
-  </Layout>
 </template>
 
 <script setup lang="ts">
@@ -112,7 +110,6 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import * as echarts from 'echarts';
-import Layout from '../components/Layout.vue';
 import {
   ArrowLeft,
   Refresh,

@@ -1,6 +1,5 @@
 <template>
-  <Layout>
-    <div class="tasks">
+  <div class="tasks">
       <el-row :gutter="20">
         <el-col :span="24">
           <div class="page-header">
@@ -172,14 +171,12 @@
         </template>
       </el-dialog>
     </div>
-  </Layout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import Layout from '../components/Layout.vue';
 import { useTaskStore } from '../stores/tasks';
 import {
   Plus,

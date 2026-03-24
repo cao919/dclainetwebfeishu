@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-config-provider :locale="zhCn">
-      <router-view />
+      <Layout />
     </el-config-provider>
   </div>
 </template>
@@ -11,6 +11,7 @@ import { provide } from 'vue';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import { ElConfigProvider } from 'element-plus';
 import 'dayjs/locale/zh-cn';
+import Layout from './components/Layout.vue';
 
 provide('zhCn', zhCn);
 </script>
