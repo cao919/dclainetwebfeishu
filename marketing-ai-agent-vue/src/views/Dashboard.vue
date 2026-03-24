@@ -115,15 +115,15 @@ const metricCards = computed(() => {
       color: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
       icon: DataAnalysis
     },
-    total_conversions: {
-      label: '总转化数',
-      value: metrics.total_conversions,
-      type: 'number',
+    avg_conversion_rate: {
+      label: '平均转化率',
+      value: metrics.avg_conversion_rate || 0,
+      type: 'percent',
       color: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
       icon: TrendCharts
     },
     roi: {
-      label: '投资回报率',
+      label: '总ROI',
       value: metrics.roi,
       type: 'percent',
       color: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',

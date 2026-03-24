@@ -24,9 +24,11 @@ router.get('/metrics', async (req, res) => {
       'SELECT COALESCE(SUM(budget), 0) as total_budget FROM marketing_task'
     );
 
-    // 最近30天的转化数
-    const [{ total_conversions }] = await query(`
-      SELECT COALESCE(SUM(conversions), 0) as total_conversions
+    // 最近30天的转化数和点击数
+    const [{ total_conversions, total_clicks }] = await query(`
+      SELECT 
+        COALESCE(SUM(conversions), 0) as total_conversions,
+        COALESCE(SUM(clicks), 0) as total_clicks
       FROM marketing_performance
       WHERE date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
     `);
@@ -41,6 +43,7 @@ router.get('/metrics', async (req, res) => {
     `);
 
     const roi = total_cost > 0 ? ((total_revenue - total_cost) / total_cost) * 100 : 0;
+    const avg_conversion_rate = total_clicks > 0 ? (total_conversions / total_clicks) * 100 : 0;
 
     res.json({
       total_tasks,
@@ -48,6 +51,8 @@ router.get('/metrics', async (req, res) => {
       completed,
       total_budget: parseFloat(total_budget),
       total_conversions,
+      total_clicks,
+      avg_conversion_rate: parseFloat(avg_conversion_rate.toFixed(2)),
       total_cost: parseFloat(total_cost),
       total_revenue: parseFloat(total_revenue),
       roi: parseFloat(roi.toFixed(2))

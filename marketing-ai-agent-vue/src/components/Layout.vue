@@ -27,7 +27,10 @@
             <el-icon><List /></el-icon>
             <template #title>营销任务</template>
           </el-menu-item>
-          <el-menu-item index="/analytics" :disabled="!currentTaskId">
+          <el-menu-item 
+            :index="currentTaskId ? `/analytics/${currentTaskId}` : '/analytics'" 
+            :disabled="!currentTaskId"
+          >
             <el-icon><TrendCharts /></el-icon>
             <template #title>效果分析</template>
           </el-menu-item>
@@ -50,6 +53,22 @@
             </el-breadcrumb>
           </div>
           <div class="header-right">
+            <!-- 语言切换 -->
+            <el-dropdown @command="handleLanguageChange">
+              <el-button text size="large" style="margin-right: 16px;">
+                <el-icon><Language /></el-icon>
+                {{ currentLanguageLabel }}
+                <el-icon><ArrowDown /></el-icon>
+              </el-button>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item command="zh-CN">中文</el-dropdown-item>
+                  <el-dropdown-item command="en-US">English</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+            
+            <!-- 用户菜单 -->
             <el-dropdown>
               <el-button type="primary" text size="large">
                 <el-icon><User /></el-icon>
@@ -81,6 +100,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import {
   DataAnalysis,
   Odometer,
@@ -89,11 +109,23 @@ import {
   Expand,
   Fold,
   User,
-  ArrowDown
+  ArrowDown,
+  Language
 } from '@element-plus/icons-vue';
 
 const route = useRoute();
+const { locale } = useI18n();
 const sidebarCollapsed = ref(false);
+
+const currentLanguageLabel = computed(() => {
+  return locale.value === 'zh-CN' ? '中文' : 'English';
+});
+
+const handleLanguageChange = (lang: string) => {
+  locale.value = lang;
+  localStorage.setItem('language', lang);
+  location.reload();
+};
 
 const currentRoute = computed(() => route.path);
 const currentTaskId = computed(() => {

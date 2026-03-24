@@ -8,6 +8,8 @@ export interface DashboardMetrics {
   completed: number;
   total_budget: number;
   total_conversions: number;
+  total_clicks: number;
+  avg_conversion_rate: number;
   total_cost: number;
   total_revenue: number;
   roi: number;

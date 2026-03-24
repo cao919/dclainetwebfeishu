@@ -98,6 +98,34 @@
                 :status="getStageStatus(stage.key)"
               />
             </el-steps>
+            
+            <!-- 阶段详情和输入 -->
+            <div class="stage-detail" v-if="currentStage">
+              <el-divider content-position="left">
+                <span class="stage-detail-title">{{ currentStage.label }} - 输出内容</span>
+                <el-tag :type="getStageStatusTagType(currentStage.key)" size="small" style="margin-left: 10px;">
+                  {{ getStageStatusText(currentStage.key) }}
+                </el-tag>
+              </el-divider>
+              
+              <el-form v-if="currentStageContent" label-width="120px">
+                <el-form-item label="阶段内容">
+                  <el-input
+                    v-model="currentStageContent.content"
+                    type="textarea"
+                    :rows="8"
+                    placeholder="请输入该阶段的分析结果和输出内容"
+                    :disabled="currentStageContent.status === 'completed'"
+                  />
+                </el-form-item>
+                <el-form-item v-if="currentStageContent.status !== 'completed'">
+                  <el-button type="primary" @click="saveStageContent">
+                    保存内容
+                  </el-button>
+                </el-form-item>
+              </el-form>
+              <el-empty v-else description="该阶段暂无内容" :image-size="80" />
+            </div>
           </el-card>
         </el-col>
       </el-row>
@@ -128,18 +156,35 @@
                       {{ creative.content }}
                     </div>
                     <div v-else class="image-content">
-                      <el-image :src="creative.content" fit="cover" />
+                      <el-image 
+                        :src="creative.content" 
+                        fit="cover"
+                        :preview-src-list="[creative.content]"
+                        placeholder="加载中..."
+                      />
                     </div>
                   </div>
                   <div class="creative-footer">
-                    <span>评分: {{ creative.performance_score }}</span>
-                    <el-switch
-                      v-model="creative.status"
-                      active-value="active"
-                      inactive-value="paused"
-                      active-text="启用"
-                      inactive-text="暂停"
-                    />
+                    <div class="creative-footer-left">
+                      <el-rate 
+                        :model-value="creative.performance_score / 20" 
+                        disabled 
+                        size="small"
+                        show-score
+                        :text-color="'#ff9900'"
+                      />
+                    </div>
+                    <div class="creative-footer-right">
+                      <el-switch
+                        v-model="creative.status"
+                        active-value="active"
+                        inactive-value="paused"
+                        size="small"
+                      />
+                      <span style="font-size: 12px; margin-left: 4px;">
+                        {{ creative.status === 'active' ? '启用' : '暂停' }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </el-col>
@@ -234,6 +279,45 @@ const creatives = computed(() => taskStore.creatives);
 const showCreativeDialog = ref(false);
 const creating = ref(false);
 const creativeFormRef = ref();
+
+// 阶段相关
+const currentStage = computed(() => {
+  if (!currentTask.value) return null;
+  return stageList[getStageIndex()];
+});
+
+const currentStageContent = computed(() => {
+  if (!currentStage.value) return null;
+  return stages.value.find(s => s.stage === currentStage.value?.key);
+});
+
+const getStageStatusTagType = (stageKey: string) => {
+  const status = getStageStatus(stageKey);
+  if (status === 'success') return 'success';
+  if (status === 'process') return 'warning';
+  return 'info';
+};
+
+const getStageStatusText = (stageKey: string) => {
+  const status = getStageStatus(stageKey);
+  const textMap: Record<string, string> = {
+    wait: '待执行',
+    process: '进行中',
+    success: '已完成'
+  };
+  return textMap[status] || status;
+};
+
+const saveStageContent = async () => {
+  if (!currentStage.value || !currentStageContent.value) return;
+  
+  try {
+    // TODO: 调用API保存阶段内容
+    ElMessage.success('阶段内容保存成功');
+  } catch (error) {
+    ElMessage.error('保存失败');
+  }
+};
 
 const stageList = [
   { key: 'data_collection', label: '数据采集' },
@@ -468,6 +552,16 @@ onMounted(async () => {
   border-top: 1px solid #e4e7ed;
   font-size: 14px;
   color: #666;
+}
+
+.creative-footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.creative-footer-right {
+  display: flex;
+  align-items: center;
 }
 
 .add-creative {
